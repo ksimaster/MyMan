@@ -6,7 +6,7 @@
         _UvBottomLeftRight ("UV of bottom corners", Vector) = (0 , 0, 1, 0) 
     }
 
-    // For GLES3 or GLES2 on device
+    // For GLES3
     SubShader
     {
         Pass
@@ -15,12 +15,10 @@
 
             GLSLPROGRAM
 
-            #pragma only_renderers gles3 gles
+            #pragma only_renderers gles3
 
             #ifdef SHADER_API_GLES3
             #extension GL_OES_EGL_image_external_essl3 : require
-            #else
-            #extension GL_OES_EGL_image_external : require
             #endif
 
             uniform vec4 _UvTopLeftRight;
@@ -32,11 +30,13 @@
 
             void main()
             {
+                #ifdef SHADER_API_GLES3
                 vec2 uvTop = mix(_UvTopLeftRight.xy, _UvTopLeftRight.zw, gl_MultiTexCoord0.x);
                 vec2 uvBottom = mix(_UvBottomLeftRight.xy, _UvBottomLeftRight.zw, gl_MultiTexCoord0.x);
                 textureCoord = mix(uvTop, uvBottom, gl_MultiTexCoord0.y);
 
                 gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+                #endif
             }
 
             #endif
@@ -49,8 +49,6 @@
             {
                 #ifdef SHADER_API_GLES3
                 gl_FragColor = texture(_MainTex, textureCoord);
-                #else
-                gl_FragColor = textureExternal(_MainTex, textureCoord);
                 #endif
             }
 
@@ -60,7 +58,6 @@
         }
     }
 
-  // For Instant Preview
   Subshader
   {
     Pass
@@ -69,7 +66,7 @@
 
       CGPROGRAM
 
-      #pragma exclude_renderers gles3 gles
+      #pragma exclude_renderers gles3
       #pragma vertex vert
       #pragma fragment frag
 

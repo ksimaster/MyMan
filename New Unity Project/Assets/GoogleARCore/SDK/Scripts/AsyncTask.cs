@@ -32,27 +32,19 @@ namespace GoogleARCore
     /// <typeparam name="T">The resultant type of the task.</typeparam>
     public class AsyncTask<T>
     {
-        private static bool s_IsInitialized = false;
-
         /// <summary>
         /// A collection of actons to perform on the main Unity thread after the task is complete.
         /// </summary>
         private List<Action<T>> m_ActionsUponTaskCompletion;
 
+        /// @cond EXCLUDE_FROM_DOXYGEN
         /// <summary>
         /// Constructor for AsyncTask.
         /// </summary>
         /// <param name="asyncOperationComplete">A callback that, when invoked, changes the status of the task to
         /// complete and sets the result based on the argument supplied.</param>
-        internal AsyncTask(out Action<T> asyncOperationComplete)
+        public AsyncTask(out Action<T> asyncOperationComplete)
         {
-            // Register for early update event.
-            if (!s_IsInitialized)
-            {
-                LifecycleManager.Instance.EarlyUpdate += AsyncTask.OnUpdate;
-                s_IsInitialized = true;
-            }
-
             IsComplete = false;
             asyncOperationComplete = delegate(T result)
             {
@@ -71,15 +63,20 @@ namespace GoogleARCore
             };
         }
 
+        /// @endcond
+
+        /// @cond EXCLUDE_FROM_DOXYGEN
         /// <summary>
         /// Constructor for AsyncTask that creates a completed task.
         /// </summary>
         /// <param name="result">The result of the completed task.</param>
-        internal AsyncTask(T result)
+        public AsyncTask(T result)
         {
             Result = result;
             IsComplete = true;
         }
+
+        /// @endcond
 
         /// <summary>
         /// Gets a value indicating whether the task is complete.
@@ -108,7 +105,6 @@ namespace GoogleARCore
         /// <param name="doAfterTaskComplete">The action to invoke when task is complete.  The result of the task will
         /// be passed as an argument to the action.</param>
         /// <returns>The invoking asynchronous task.</returns>
-        [SuppressMemoryAllocationError(Reason = "Could allocate new List")]
         public AsyncTask<T> ThenAction(Action<T> doAfterTaskComplete)
         {
             // Perform action now if task is already complete.
@@ -129,10 +125,11 @@ namespace GoogleARCore
         }
     }
 
+    /// @cond EXCLUDE_FROM_DOXYGEN
     /// <summary>
     /// Helper methods for dealing with asynchronous tasks.
     /// </summary>
-    internal class AsyncTask
+    public class AsyncTask
     {
         private static Queue<Action> s_UpdateActionQueue = new Queue<Action>();
         private static object s_LockObject = new object();
@@ -164,4 +161,6 @@ namespace GoogleARCore
             }
         }
     }
+
+    /// @endcond
 }

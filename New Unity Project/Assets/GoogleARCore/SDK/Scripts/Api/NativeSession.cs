@@ -22,15 +22,20 @@ namespace GoogleARCoreInternal
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.InteropServices;
     using GoogleARCore;
     using UnityEngine;
 
-    internal class NativeSession
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
+    Justification = "Internal")]
+    public class NativeSession
     {
-#pragma warning disable 414
-        private static bool s_ReportedEngineType = false;
-#pragma warning restore 414
+        private IntPtr m_SessionHandle = IntPtr.Zero;
+
+        private IntPtr m_FrameHandle = IntPtr.Zero;
+
+        private IntPtr m_PointCloudHandle = IntPtr.Zero;
 
         private float m_LastReleasedPointcloudTimestamp = 0.0f;
 
@@ -41,16 +46,12 @@ namespace GoogleARCoreInternal
 
         public NativeSession(IntPtr sessionHandle, IntPtr frameHandle)
         {
-            SessionHandle = sessionHandle;
-            FrameHandle = frameHandle;
+            m_SessionHandle = sessionHandle;
+            m_FrameHandle = frameHandle;
             m_TrackableManager = new TrackableManager(this);
 
             AnchorApi = new AnchorApi(this);
-            AugmentedImageApi = new AugmentedImageApi(this);
-            AugmentedImageDatabaseApi = new AugmentedImageDatabaseApi(this);
             CameraApi = new CameraApi(this);
-            CameraConfigApi = new CameraConfigApi(this);
-            CameraConfigListApi = new CameraConfigListApi(this);
             CameraMetadataApi = new CameraMetadataApi(this);
             FrameApi = new FrameApi(this);
             HitTestApi = new HitTestApi(this);
@@ -64,41 +65,51 @@ namespace GoogleARCoreInternal
             SessionConfigApi = new SessionConfigApi(this);
             TrackableApi = new TrackableApi(this);
             TrackableListApi = new TrackableListApi(this);
-
-#if !UNITY_EDITOR
-            if (!s_ReportedEngineType)
-            {
-                SessionApi.ReportEngineType();
-                s_ReportedEngineType = true;
-            }
-#endif
         }
 
-        public IntPtr SessionHandle { get; private set; }
+        public IntPtr SessionHandle
+        {
+            get
+            {
+                return m_SessionHandle;
+            }
+        }
 
-        public IntPtr FrameHandle { get; private set; }
+        public IntPtr FrameHandle
+        {
+            get
+            {
+                return m_FrameHandle;
+            }
+        }
 
-        public IntPtr PointCloudHandle { get; private set; }
+        public IntPtr PointCloudHandle
+        {
+            get
+            {
+                return m_PointCloudHandle;
+            }
+        }
 
         public bool IsPointCloudNew
         {
             get
             {
+                // TODO (b/73256094): Remove when fixed.
+                if (LifecycleManager.Instance.SessionStatus != SessionStatus.Tracking)
+                {
+                    var previousLastTimestamp = m_LastReleasedPointcloudTimestamp;
+                    m_LastReleasedPointcloudTimestamp = 0.0f;
+                    return previousLastTimestamp != 0;
+                }
+
                 return PointCloudApi.GetTimestamp(PointCloudHandle) != m_LastReleasedPointcloudTimestamp;
             }
         }
 
         public AnchorApi AnchorApi { get; private set; }
 
-        public AugmentedImageApi AugmentedImageApi { get; private set; }
-
-        public AugmentedImageDatabaseApi AugmentedImageDatabaseApi { get; private set; }
-
         public CameraApi CameraApi { get; private set; }
-
-        public CameraConfigApi CameraConfigApi { get; private set; }
-
-        public CameraConfigListApi CameraConfigListApi { get; private set; }
 
         public CameraMetadataApi CameraMetadataApi { get; private set; }
 
@@ -172,23 +183,21 @@ namespace GoogleARCoreInternal
             m_TrackableManager.GetTrackables<T>(trackables, filter);
         }
 
-        public void OnUpdate(IntPtr frameHandle)
+        public void OnUpdate()
         {
-            FrameHandle = frameHandle;
-
-#if UNITY_EDITOR || UNITY_ANDROID
             // After first frame, release previous frame's point cloud.
-            if (PointCloudHandle != IntPtr.Zero)
+            if (m_PointCloudHandle != IntPtr.Zero)
             {
-                m_LastReleasedPointcloudTimestamp = PointCloudApi.GetTimestamp(PointCloudHandle);
-                PointCloudApi.Release(PointCloudHandle);
-                PointCloudHandle = IntPtr.Zero;
+                m_LastReleasedPointcloudTimestamp = PointCloudApi.GetTimestamp(m_PointCloudHandle);
+                PointCloudApi.Release(m_PointCloudHandle);
+                m_PointCloudHandle = IntPtr.Zero;
             }
 
-            IntPtr pointCloudHandle;
-            FrameApi.TryAcquirePointCloudHandle(out pointCloudHandle);
-            PointCloudHandle = pointCloudHandle;
-#endif
+            // TODO (b/73256094): Remove when fixed.
+            if (LifecycleManager.Instance.SessionStatus == SessionStatus.Tracking)
+            {
+                 FrameApi.TryAcquirePointCloudHandle(out m_PointCloudHandle);
+            }
         }
     }
 }

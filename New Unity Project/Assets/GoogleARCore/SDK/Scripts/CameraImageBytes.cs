@@ -32,7 +32,7 @@ namespace GoogleARCore
     {
         private IntPtr m_ImageHandle;
 
-        internal CameraImageBytes(IntPtr imageHandle) : this()
+        internal CameraImageBytes(IntPtr imageHandle)
         {
             m_ImageHandle = imageHandle;
             if (m_ImageHandle != IntPtr.Zero)
@@ -126,7 +126,6 @@ namespace GoogleARCore
         /// <summary>
         /// Calls release as part of IDisposable pattern supporting 'using' statements.
         /// </summary>
-        [SuppressMemoryAllocationError(IsWarning = true, Reason = "Requires further investigation.")]
         public void Dispose()
         {
             Release();

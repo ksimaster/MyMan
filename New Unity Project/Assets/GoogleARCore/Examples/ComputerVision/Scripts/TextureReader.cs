@@ -17,11 +17,13 @@
 //
 // </copyright>
 //-----------------------------------------------------------------------
-namespace GoogleARCore.Examples.ComputerVision
+namespace GoogleARCore.TextureReader
 {
     using System;
+    using System.Collections.Generic;
     using GoogleARCore;
     using UnityEngine;
+    using UnityEngine.Rendering;
 
     /// <summary>
     /// Component that provides CPU access to ArCore GPU texture.
