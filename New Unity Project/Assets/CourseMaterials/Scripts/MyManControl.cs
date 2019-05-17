@@ -8,8 +8,9 @@ public class MyManControl : MonoBehaviour
 
     // Use this for initialization
 
-    public Transform MyMan;
+    public GameObject MyMan;
     public float moveSpeed;
+    public float turnSpeed;
     public Joystick joystick;
 
 
@@ -20,19 +21,34 @@ public class MyManControl : MonoBehaviour
 
     private void Start()
     {
-        OriginalY = MyMan.transform.position.y;
+       // OriginalY = MyMan.transform.position.y;
 
     }
 
     void Update()
     {
-        Vector3 moveVector = (transform.right * joystick.Horizontal + transform.forward * joystick.Vertical).normalized;
+        if ((Input.GetKey(KeyCode.UpArrow)) || (Input.GetKey(KeyCode.W)))
+            MyMan.transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
+
+        if (Input.GetKey(KeyCode.DownArrow) || (Input.GetKey(KeyCode.S)))
+            MyMan.transform.Translate(-Vector3.forward * moveSpeed * Time.deltaTime);
+
+        if (Input.GetKey(KeyCode.LeftArrow) || (Input.GetKey(KeyCode.A)))
+            MyMan.transform.Rotate(Vector3.up, -turnSpeed * Time.deltaTime);
+
+        if (Input.GetKey(KeyCode.RightArrow) || (Input.GetKey(KeyCode.D)))
+            MyMan.transform.Rotate(Vector3.up, turnSpeed * Time.deltaTime);
+
+
+
+
+        /* Vector3 moveVector = (transform.right * joystick.Horizontal + transform.forward * joystick.Vertical).normalized;
         MyMan.transform.Translate(Vector3.forward * Mathf.Clamp(joystick.Vertical * 6, -1, 1) * moveSpeed * Time.deltaTime);
         MyMan.transform.Rotate(Vector3.up * joystick.Horizontal * 66 * Time.deltaTime);
 
+        */
 
-
-     //   MyMan.transform.position = new Vector3(MyMan.transform.position.x, OriginalY + scrollbar.value, MyMan.transform.position.z);
+        //   MyMan.transform.position = new Vector3(MyMan.transform.position.x, OriginalY + scrollbar.value, MyMan.transform.position.z);
     }
 
 
