@@ -144,10 +144,46 @@ Animation:
   m_Animation: {fileID: 0}
   m_Animations:
   - {fileID: 7400000, guid: 74d00ff3a014b514aaecf400d0f91496, type: 2}
+  - {fileID: 7400000, guid: 5b17f5dae473a8a46bca8620f9a34661, type: 2}
+  - {fileID: 7400000, guid: b8e148f9db0b8d047b3be5071313656c, type: 2}
+  - {fileID: 7400000, guid: b99d9d7ff3cecad4ea54264e78af7cdc, type: 2}
   m_WrapMode: 0
-  m_PlayAutomatically: 1
+  m_PlayAutomatically: 0
   m_AnimatePhysics: 1
   m_CullingType: 0
+--- !u!54 &27829971
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 27829968}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &27829972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 27829968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efcbefe6a29df1b42b67cdd18381058c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MyMan: {fileID: 27829968}
+  moveSpeed: 5
+  turnSpeed: 40
+  joystick: {fileID: 114859346367353968, guid: ce5089f3caa5bb042a4d4c23a427bc82, type: 3}
+  jumpforce: 0.5
 --- !u!1 &585216118
 GameObject:
   m_ObjectHideFlags: 0
@@ -228,7 +264,6 @@ GameObject:
   - component: {fileID: 696835753}
   - component: {fileID: 696835752}
   - component: {fileID: 696835751}
-  - component: {fileID: 696835754}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -300,22 +335,6 @@ Transform:
   m_Father: {fileID: 1545036758}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &696835754
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 696835750}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efcbefe6a29df1b42b67cdd18381058c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MyMan: {fileID: 27829968}
-  moveSpeed: 5
-  turnSpeed: 40
-  joystick: {fileID: 114859346367353968, guid: ce5089f3caa5bb042a4d4c23a427bc82, type: 3}
 --- !u!1001 &823432524
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -432,6 +451,7 @@ GameObject:
   - component: {fileID: 999217878}
   - component: {fileID: 999217877}
   - component: {fileID: 999217876}
+  - component: {fileID: 999217879}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -500,6 +520,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &999217879
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 999217875}
+  serializedVersion: 2
+  m_Mass: 10000
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!4 &1545036758 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400138, guid: 876b6f3bfe05cad49af387cb281bc28c,
