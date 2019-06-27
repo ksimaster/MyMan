@@ -21,6 +21,7 @@ public class MyManControl : MonoBehaviour
 
     float OriginalY = 0;
     bool temp = false;
+   
 
     private void Start()
     {
@@ -32,8 +33,11 @@ public class MyManControl : MonoBehaviour
 
     void Update()
     {
-        if ((Input.GetKey(KeyCode.UpArrow)) || (Input.GetKey(KeyCode.W)))
+        if ((Input.GetKeyDown(KeyCode.UpArrow)) || (Input.GetKeyDown(KeyCode.W))) {  
             MyMan.transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
+            GetComponent<Animation>().Play("Running");
+        }
+        if((Input.GetKeyUp(KeyCode.UpArrow)) || (Input.GetKeyUp(KeyCode.W))) GetComponent<Animation>().Play("Idle");
 
         if (Input.GetKey(KeyCode.DownArrow) || (Input.GetKey(KeyCode.S)))
             MyMan.transform.Translate(-Vector3.forward * moveSpeed * Time.deltaTime);
@@ -51,6 +55,10 @@ public class MyManControl : MonoBehaviour
                 rigidbody.AddForce(Vector3.up*jumpforce);
            
         }
+
+        
+         
+         
            // rigidbody.AddForce(0, 300, 0);
 
 
@@ -83,53 +91,61 @@ public class MyManControl : MonoBehaviour
         //   MyMan.transform.position = new Vector3(MyMan.transform.position.x, OriginalY + scrollbar.value, MyMan.transform.position.z);
     }
 
-  /*  bool isGrounded()
-    {
-        Collider[] cc = Physics.OverlapSphere(new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), 1.5f);
-        int j = 0;
-        for (int i = 0; i < cc.Length; i++)
-        {
-            if (cc[i].gameObject != gameObject)
-            {
-                j++;
-            }
-        }
-        return j > 0;
-    }
-/*
-    void Jump()
-    {
-        if (isGrounded())
-        {
 
-            rigidbody.AddForce(jmp, ForceMode.Impulse);
-        }
+    void Run_Go_Stop()
+    {
+
+
     }
 
-    /*  public void ToggleDragonFlame()
+
+    /*  bool isGrounded()
       {
-          InvokeRepeating("DragonFlame", 0, 2);
+          Collider[] cc = Physics.OverlapSphere(new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), 1.5f);
+          int j = 0;
+          for (int i = 0; i < cc.Length; i++)
+          {
+              if (cc[i].gameObject != gameObject)
+              {
+                  j++;
+              }
+          }
+          return j > 0;
+      }
+  /*
+      void Jump()
+      {
+          if (isGrounded())
+          {
 
+              rigidbody.AddForce(jmp, ForceMode.Impulse);
+          }
       }
 
+      /*  public void ToggleDragonFlame()
+        {
+            InvokeRepeating("DragonFlame", 0, 2);
 
-      void DragonFlame()
-      {
-          Dragon.transform.Find("DragonFlame").transform.localPosition = new Vector3(0, 0.884f, 0.614f);
+        }
 
-          if (Dragon.transform.Find("DragonFlame").gameObject.activeSelf == false)
-          {
-              Dragon.transform.Find("DragonFlame").gameObject.SetActive(true);
-              return;
-          }
 
-          if (Dragon.transform.Find("DragonFlame").gameObject.activeSelf == true)
-          {
-              Dragon.transform.Find("DragonFlame").gameObject.SetActive(false);
-              CancelInvoke("DragonFlame");
-          }
+        void DragonFlame()
+        {
+            Dragon.transform.Find("DragonFlame").transform.localPosition = new Vector3(0, 0.884f, 0.614f);
 
-      } */
+            if (Dragon.transform.Find("DragonFlame").gameObject.activeSelf == false)
+            {
+                Dragon.transform.Find("DragonFlame").gameObject.SetActive(true);
+                return;
+            }
+
+            if (Dragon.transform.Find("DragonFlame").gameObject.activeSelf == true)
+            {
+                Dragon.transform.Find("DragonFlame").gameObject.SetActive(false);
+                CancelInvoke("DragonFlame");
+            }
+
+        } */
 
 
 }
